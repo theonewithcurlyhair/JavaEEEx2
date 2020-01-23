@@ -15,7 +15,7 @@
         <h1>Hello World!</h1>
         
         <%
-            String countList = "";
+            String countList = "<ul>";
             String msg = "";
             String valueToStart = "";
             String valueToCount = "";
@@ -28,7 +28,28 @@
                 
                 if(request.getParameter("start") != null){
                     valueToCount = request.getParameter("countto");
-                }                
+                }
+
+                if(!valueToStart.equals("") && !valueToCount.equals("")){
+                    //using string params parse to int 
+                    //do the business rule check
+                    //start must be less than countto
+                    //throw new exception
+                    int start = Integer.parseInt(valueToStart);
+                    int countTo = Integer.parseInt(valueToCount);
+                    
+                    if(start >= countTo){
+                        throw new Exception("ValueToStart can't be greater than ValueToCountTo");
+                    }
+                    
+                    //If good list for the items
+                    for (int i = start; i <= countTo; i++) {
+                        countList += "<li>" + i + "</li>";
+                    }
+                    countList += "</ul>";
+                } else{ 
+                    msg = "No query string parameters present";
+                }
             } catch (Exception e) {
                 msg = "<p style='color:red;'>An Error occured</p>";
                 msg += "<p style='color:red;'>" + e.getMessage() + "</p>";
@@ -37,6 +58,9 @@
         
         <%= valueToStart %>
         <%= valueToCount %>
-        <%= msg %>
+        <%= countList %>
+        <% if(!msg.equals(""))%><div style="background-color: pink; min-height: 20px;">
+            <%= msg %>
+        </div>
     </body>
 </html>
